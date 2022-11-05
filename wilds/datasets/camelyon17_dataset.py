@@ -65,10 +65,12 @@ class Camelyon17Dataset(WILDSDataset):
         self._original_resolution = (96,96)
 
         # Read in metadata
+        print("metadata")
         self._metadata_df = pd.read_csv(
             os.path.join(self._data_dir, 'metadata.csv'),
             index_col=0,
             dtype={'patient': 'str'})
+        print("metadata1")
 
         # Get the y values
         self._y_array = torch.LongTensor(self._metadata_df['tumor'].values)
@@ -76,10 +78,12 @@ class Camelyon17Dataset(WILDSDataset):
         self._n_classes = 2
 
         # Get filenames
+        print("metadata2")
         self._input_array = [
             f'patches/patient_{patient}_node_{node}/patch_patient_{patient}_node_{node}_x_{x}_y_{y}.png'
             for patient, node, x, y in
             self._metadata_df.loc[:, ['patient', 'node', 'x_coord', 'y_coord']].itertuples(index=False, name=None)]
+        print("metadata3")
 
         self._split_dict = {
             'train': 0,
@@ -114,18 +118,19 @@ class Camelyon17Dataset(WILDSDataset):
         else:
             raise ValueError(f'Split scheme {self._split_scheme} not recognized')
         self._split_array = self._metadata_df['split'].values
-
+        print("meta3.5")
         self._metadata_array = torch.stack(
             (torch.LongTensor(centers),
              torch.LongTensor(self._metadata_df['slide'].values),
              self._y_array),
             dim=1)
+        print("meta3.6")
         self._metadata_fields = ['hospital', 'slide', 'y']
-
+        print("meta3.7")
         self._eval_grouper = CombinatorialGrouper(
             dataset=self,
             groupby_fields=['slide'])
-
+        print("meta4")
         super().__init__(root_dir, download, split_scheme)
 
     def get_input(self, idx):

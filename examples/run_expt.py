@@ -164,7 +164,6 @@ def main():
                         help="Path to Weights & Biases API Key. If use_wandb is set to True and this argument is not specified, user will be prompted to authenticate.")
     parser.add_argument('--wandb_kwargs', nargs='*', action=ParseKwargs, default={},
                         help='keyword arguments for wandb.init() passed as key1=value1 key2=value2')
-
     config = parser.parse_args()
     config = populate_defaults(config)
 
@@ -209,6 +208,8 @@ def main():
     # Set random seed
     set_seed(config.seed)
 
+    print("test")
+
     # Data
     full_dataset = wilds.get_dataset(
         dataset=config.dataset,
@@ -217,7 +218,7 @@ def main():
         download=config.download,
         split_scheme=config.split_scheme,
         **config.dataset_kwargs)
-
+    print("test1")
     # Transforms & data augmentations for labeled dataset
     # To modify data augmentation, modify the following code block.
     # If you want to use transforms that modify both `x` and `y`,
@@ -398,12 +399,14 @@ def main():
         log_group_data({"unlabeled": unlabeled_dataset}, log_grouper, logger)
 
     # Initialize algorithm & load pretrained weights if provided
+    print("model")
     algorithm = initialize_algorithm(
         config=config,
         datasets=datasets,
         train_grouper=train_grouper,
         unlabeled_dataset=unlabeled_dataset,
     )
+    print("model1")
 
     model_prefix = get_model_prefix(datasets['train'], config)
     if not config.eval_only:
